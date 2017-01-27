@@ -3,16 +3,19 @@
 		
 		public $email = '';
 		public $feedURL = '';
+		public $emailSubject = '';
+		public $pathToOldFeed = __DIR__.'/files/oldFeed.txt'; 
+		public $pathToNewFeed = __DIR__.'/files/newFeed.txt'; 
 		
 		public function RenameOldFeed() {
-			if(file_exists('files/oldFeed.txt')) {
-				exec('rm -f files/oldfeed.txt');
-				rename('files/newFeed.txt', 'files/oldFeed.txt');
+			if(file_exists($this->pathToOldFeed)) {
+				exec('rm -f '.$this->pathToOldFeed);
+				rename($this->pathToNewFeed, $this->pathToOldFeed);
 			}
 		}
 		
 		public function GetNewFeed($url) {
-			exec('cd files && wget -O newFeed.txt '.$url);
+			exec('wget -O '.$this->pathToNewFeed.' '.$url);
 		}
 		
 		public function ParseToCSV($uri) {
@@ -71,7 +74,7 @@
 			if($emailContent == '') {
 				$emailContent = 'No Promo Changes';
 			}
-			mail($this->email, 'Appliance City Promo Scan', $emailContent);
+			mail($this->email, $this->emailSubject, $emailContent);
 			
 		}
 		
@@ -82,7 +85,7 @@
 	$CHGooglePromotionsDiff->RenameOldFeed();
 	$CHGooglePromotionsDiff->GetNewFeed($CHGooglePromotionsDiff->feedURL);
 	
-	$emailContent = $CHGooglePromotionsDiff->DiffFiles('files/newFeed.txt', 'files/oldFeed.txt');
+	$emailContent = $CHGooglePromotionsDiff->DiffFiles($CHGooglePromotionsDiff->pathToNewFeed, $CHGooglePromotionsDiff->pathToOldFeed);
 	$CHGooglePromotionsDiff->EmailPromoIDChanges($emailContent);
 	
 	echo '<h1>Script Executed</h1>';
