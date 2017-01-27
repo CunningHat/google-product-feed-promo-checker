@@ -1,4 +1,11 @@
 <?php
+/*
+	Name: Google Product Feed Promotions Checker
+	Author: Adam Dennis (https://github.com/CunningHat)
+	License: GPL v3.0
+	Version: 1.0.1
+*/
+
 	Class CHGooglePromotionsDiff {
 		
 		public $email = '';
